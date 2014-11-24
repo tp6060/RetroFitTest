@@ -2,32 +2,44 @@ package org.lojantakanen.retrofittest.content;
 
 import java.util.List;
 
-import org.lojantakanen.retrofittest.GitHubAsyncTask;
+import org.lojantakanen.retrofittest.GitHubUsersLoader;
 import org.lojantakanen.retrofittest.Model.User;
 import org.lojantakanen.retrofittest.event.GitHubUsersEvent;
 
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
+import android.content.Loader;
+import android.os.Bundle;
 import android.util.Log;
 
 import de.greenrobot.event.EventBus;
 
-public class GitHubUsersContent {
+public class GitHubUsersContent implements LoaderCallbacks {
 	private final static String TAG="GitHubUsersContent";
 	public List<User> users;
-	private GitHubAsyncTask task = new GitHubAsyncTask();
+	private static int LOADER_ID = 0x01;
+	Context context;
 	
-	public GitHubUsersContent() {
-		EventBus.getDefault().register(this);
-		task = new GitHubAsyncTask();
-		task.execute();
+	public GitHubUsersContent(Context context) {
+		this.context = context;
 	}
 	
-	public void onEvent(GitHubUsersEvent event) {
-		Log.i(TAG, "onEvent");
-		users = event.getUsers();
+	@Override
+	public Loader onCreateLoader(int id, Bundle args) {
+		GitHubUsersLoader loader = new GitHubUsersLoader(context); 
+		return loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader arg0, Object arg1) {
+		// TODO Auto-generated method stub
 		
 	}
-	List<User> getUsers() {
-		return users;
+
+	@Override
+	public void onLoaderReset(Loader arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
