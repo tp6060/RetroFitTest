@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.lojantakanen.retrofittest.dummy.DummyContent;
+import android.app.*;
+import android.content.*;
+import android.util.*;
 
 /**
  * A list fragment representing a list of Users. This fragment also supports
@@ -18,7 +21,31 @@ import org.lojantakanen.retrofittest.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class UserListFragment extends ListFragment {
+public class UserListFragment extends ListFragment 
+implements LoaderManager.LoaderCallbacks
+{
+	private static final String TAG="UserListFragment";
+	private GitHubListUsersLoader loader;
+	@Override
+	public Loader onCreateLoader(int id, Bundle args)
+	{
+		loader = new GitHubListUsersLoader(getActivity());
+		loader.forceLoad();
+		return loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader p1, Object p2)
+	{
+		Log.i(TAG, "onLoadFinished");
+	}
+
+	@Override
+	public void onLoaderReset(Loader p1)
+	{
+		// TODO: Implement this method
+	}
+
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the

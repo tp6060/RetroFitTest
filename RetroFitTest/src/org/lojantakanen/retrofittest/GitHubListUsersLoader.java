@@ -6,28 +6,22 @@ import org.lojantakanen.retrofittest.Model.User;
 import org.lojantakanen.retrofittest.event.GitHubUsersEvent;
 import org.lojantakanen.retrofittest.service.GitHubService;
 
-import de.greenrobot.event.EventBus;
-
 import retrofit.*;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class GitHubUsersLoader extends AsyncTaskLoader<List<User>> {
-	private RestAdapter restAdapter;
-	private GitHubService service;
-	public GitHubUsersLoader(Context context) {
-		super(context);
-		restAdapter = new RestAdapter.Builder().setEndpoint(
-				"https://github.com").build();
-		service = restAdapter.create(GitHubService.class);
-	}
-
+public class GitHubListUsersLoader extends GitHubLoader<List<User>> {
 	private List<User> users;
+
+	public GitHubListUsersLoader(Context context) {
+		super(context);
+	}
+	
 	@Override
 	public List<User> loadInBackground() {
 		// Call the service GitHubService.listUsers
 		users = service.listUsers();
-		return null;
+		return users;
 	}
 }

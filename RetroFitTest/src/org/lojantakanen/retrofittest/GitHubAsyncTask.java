@@ -10,21 +10,25 @@ import de.greenrobot.event.EventBus;
 
 import retrofit.*;
 import android.os.AsyncTask;
+import android.content.*;
 
-public class GitHubAsyncTask extends AsyncTask<Void, Integer, List<User>> {
+public class GitHubAsyncTask extends AsyncTaskLoader<List<User>>
+{
+	private RestAdapter restAdapter;
+	private GitHubService service;
+	
+	public GitHubAsyncTask(Context context) {
+		super(context);
+		
+		restAdapter = new RestAdapter.Builder().
+		setEndpoint("https://api.github.com").build();
 
-	private List<User> users;
-	@Override
-	protected List<User> doInBackground(Void... arg0) {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://api.github.com").build();
-		GitHubService service = restAdapter.create(GitHubService.class);
-		users = service.listUsers();
-		return users;
+		service = restAdapter.create(GitHubService.class);		
 	}
- 
+	
 	@Override
-	protected void onPostExecute(List<User> result) {
-		EventBus.getDefault().post(new GitHubUsersEvent(users));
-		super.onPostExecute(result);
+	public List<User> loadInBackground()
+	{
+		return service.listUsers();
 	}
 }
